@@ -23,14 +23,7 @@ type DataInfo struct {
 type SquadInfo struct {
 	ID              string          `json:"id"`
 	Name            string          `json:"name"`
-	User            User            `json:"user"`
 	CurrentTourInfo CurrentTourInfo `json:"currentTourInfo"`
-}
-
-type User struct {
-	ID   string `json:"id"`
-	Nick string `json:"nick"`
-	URL  string `json:"url"`
 }
 
 type CurrentTourInfo struct {
