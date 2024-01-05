@@ -31,10 +31,20 @@ type CurrentTourInfo struct {
 }
 
 type PlayerInfo struct {
-	SeasonPlayer SeasonPlayerInfo `json:"seasonPlayer"`
+	IsCaptain     bool             `json:"isCaptain"`
+	IsViceCaptain bool             `json:"isViceCaptain"`
+	IsStarting    bool             `json:"isStarting"`
+	SeasonPlayer  SeasonPlayerInfo `json:"seasonPlayer"`
 }
 
 type SeasonPlayerInfo struct {
+	Name  string   `json:"name"`
+	Price float64  `json:"price"`
+	Role  string   `json:"role"`
+	Team  TeamInfo `json:"team"`
+}
+
+type TeamInfo struct {
 	Name string `json:"name"`
 }
 
@@ -68,6 +78,15 @@ func main() {
 	// Выводим имена игроков
 	squad := response.Data["id_105467854"].Squads[0]
 	for _, player := range squad.CurrentTourInfo.Players {
-		fmt.Println(player.SeasonPlayer.Name)
+		fmt.Printf(
+			"%v (%v). %v. Price: %v. Is starting: %v. Is Captain: %v. Is Vice Captain: %v. \n",
+			player.SeasonPlayer.Name,
+			player.SeasonPlayer.Team.Name,
+			player.SeasonPlayer.Role,
+			player.SeasonPlayer.Price,
+			player.IsStarting,
+			player.IsCaptain,
+			player.IsViceCaptain,
+		)
 	}
 }
