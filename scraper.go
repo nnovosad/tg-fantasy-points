@@ -7,12 +7,15 @@ import (
 	"strings"
 )
 
-func scrapingTour() {
+func scrapingTour(response Response) {
 	c := colly.NewCollector()
 
 	c.OnHTML("li.teaser-event", func(e *colly.HTMLElement) {
 		match := e.ChildText(".teaser-event__board")
 		status := e.ChildText(".teaser-event__status")
+
+		squad := response.Data["id_105467854"].Squads[0]
+		players := squad.CurrentTourInfo.Players
 
 		preparedMatch := removeExtraSpaces(match)
 		preparedStatus := getStatusMatch(status)
@@ -21,6 +24,15 @@ func scrapingTour() {
 		serialNumber++
 
 		fmt.Printf("%v. %v %v \n", serialNumber, preparedStatus, preparedMatch)
+
+		if preparedStatus == "завершен" {
+			for _, v := range players {
+				teamName := v.SeasonPlayer.Team.Name
+				if strings.Contains(match, teamName) {
+					fmt.Printf("--- %v scored %v points \n", v.SeasonPlayer.Name, v.Score)
+				}
+			}
+		}
 	})
 
 	err := c.Visit("https://www.sports.ru/seria-a/")
