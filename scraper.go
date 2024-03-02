@@ -29,7 +29,26 @@ func scrapingTour(response Response) {
 			for _, v := range players {
 				teamName := v.SeasonPlayer.Team.Name
 				if strings.Contains(match, teamName) {
-					fmt.Printf("--- %v scored %v points \n", v.SeasonPlayer.Name, v.Score)
+					playerStatus := "Main cast"
+
+					if !v.IsStarting {
+						playerStatus = "On the bench"
+					}
+
+					fmt.Printf("--- %v(%v)(%v) scored %v points \n", v.SeasonPlayer.Name, teamName, playerStatus, v.Score)
+				}
+			}
+		} else {
+			for _, v := range players {
+				teamName := v.SeasonPlayer.Team.Name
+				if strings.Contains(match, teamName) {
+					playerStatus := "Main cast"
+
+					if !v.IsStarting {
+						playerStatus = "On the bench"
+					}
+
+					fmt.Printf("--- Can play %v(%v)(%v) \n", v.SeasonPlayer.Name, teamName, playerStatus)
 				}
 			}
 		}
