@@ -25,33 +25,7 @@ func scrapingTour(response Response) {
 
 		fmt.Printf("%v. %v %v \n", serialNumber, preparedStatus, preparedMatch)
 
-		if preparedStatus == "завершен" {
-			for _, v := range players {
-				teamName := v.SeasonPlayer.Team.Name
-				if strings.Contains(match, teamName) {
-					playerStatus := "Main cast"
-
-					if !v.IsStarting {
-						playerStatus = "On the bench"
-					}
-
-					fmt.Printf("--- %v(%v)(%v) scored %v points \n", v.SeasonPlayer.Name, teamName, playerStatus, v.Score)
-				}
-			}
-		} else {
-			for _, v := range players {
-				teamName := v.SeasonPlayer.Team.Name
-				if strings.Contains(match, teamName) {
-					playerStatus := "Main cast"
-
-					if !v.IsStarting {
-						playerStatus = "On the bench"
-					}
-
-					fmt.Printf("--- Can play %v(%v)(%v) \n", v.SeasonPlayer.Name, teamName, playerStatus)
-				}
-			}
-		}
+		printPlayerInfo(players, match, preparedStatus)
 	})
 
 	err := c.Visit("https://www.sports.ru/seria-a/")
@@ -78,4 +52,23 @@ func getStatusMatch(statusMatch string) string {
 	}
 
 	return statusMatch
+}
+
+func printPlayerInfo(players PlayersSlice, match string, statusMatch string) {
+	for _, v := range players {
+		teamName := v.SeasonPlayer.Team.Name
+		if strings.Contains(match, teamName) {
+			playerStatus := "Main cast"
+
+			if !v.IsStarting {
+				playerStatus = "On the bench"
+			}
+
+			if statusMatch == "завершен" {
+				fmt.Printf("--- %v(%v)(%v) scored %v points \n", v.SeasonPlayer.Name, teamName, playerStatus, v.Score)
+			} else {
+				fmt.Printf("--- Can play %v(%v)(%v) \n", v.SeasonPlayer.Name, teamName, playerStatus)
+			}
+		}
+	}
 }
