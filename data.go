@@ -24,10 +24,18 @@ type SquadInfo struct {
 	ID              string          `json:"id"`
 	Name            string          `json:"name"`
 	CurrentTourInfo CurrentTourInfo `json:"currentTourInfo"`
+	SeasonScoreInfo SeasonScoreInfo `json:"seasonScoreInfo"`
+	GlobalLeagues   []GlobalLeagues `json:"globalLeagues"`
 }
 
 type CurrentTourInfo struct {
-	Players []PlayerInfo `json:"players"`
+	Players   []PlayerInfo `json:"players"`
+	ScoreInfo ScoreInfo    `json:"scoreInfo"`
+}
+
+type ScoreInfo struct {
+	AverageScore float64 `json:"averageScore"`
+	Score        int     `json:"score"`
 }
 
 type PlayerInfo struct {
@@ -47,6 +55,17 @@ type SeasonPlayerInfo struct {
 
 type TeamInfo struct {
 	Name string `json:"name"`
+}
+
+type SeasonScoreInfo struct {
+	Place int `json:"place"`
+	Score int `json:"score"`
+}
+
+type GlobalLeagues struct {
+	Place       int `json:"place"`
+	PlaceDiff   int `json:"placeDiff"`
+	TotalPlaces int `json:"totalPlaces"`
 }
 
 func main() {
@@ -80,7 +99,13 @@ func main() {
 	scrapingTour(response)
 	fmt.Print("Finish scraping tour \n")
 
-	fmt.Print("Start display team \n")
-	displayTeam(response)
-	fmt.Print("Finish display team \n")
+	fmt.Print("Tour information: ")
+	displayTourInfo(response)
+
+	fmt.Print("Season information: ")
+	displaySeasonInfo(response)
+
+	//fmt.Print("Start display team \n")
+	//displayTeam(response)
+	//fmt.Print("Finish display team \n")
 }

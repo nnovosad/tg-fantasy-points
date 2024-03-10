@@ -44,7 +44,7 @@ func removeExtraSpaces(input string) string {
 }
 
 func getStatusMatch(statusMatch string) string {
-	regexpPattern := regexp.MustCompile(`(\d{2}\.\d{2} \d{2}:\d{2})|(первый тайм|второй тайм|завершен)`)
+	regexpPattern := regexp.MustCompile(`(\d{2}\.\d{2} \d{2}:\d{2})|(первый тайм|второй тайм|завершен|перерыв)`)
 
 	match := regexpPattern.FindStringIndex(statusMatch)
 	if match != nil {
@@ -65,9 +65,9 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) {
 			}
 
 			if statusMatch == "завершен" {
-				fmt.Printf("--- %v(%v)(%v) scored %v points \n", v.SeasonPlayer.Name, teamName, playerStatus, v.Score)
+				fmt.Printf("--- %v(%v) scored %v points. %v. \n", v.SeasonPlayer.Name, teamName, v.Score, playerStatus)
 			} else {
-				fmt.Printf("--- Can play %v(%v)(%v) \n", v.SeasonPlayer.Name, teamName, playerStatus)
+				fmt.Printf("--- Can play %v(%v). %v \n", v.SeasonPlayer.Name, teamName, playerStatus)
 			}
 		}
 	}
