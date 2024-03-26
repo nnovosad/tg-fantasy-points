@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func displaySeasonInfo(response Response) {
-	squad := response.Data["id_105467854"].Squads[0]
+func displaySeasonInfo(response Response, idSquad string) {
+	squad := response.Data[idSquad].Squads[0]
 	seasonScoreInfo := squad.SeasonScoreInfo
 
 	globalLeague := squad.GlobalLeagues[0]

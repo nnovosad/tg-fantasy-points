@@ -27,8 +27,8 @@ func (p PlayersSlice) Less(i, j int) bool {
 func (p PlayersSlice) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 func (p PlayersSlice) Len() int      { return len(p) }
 
-func displayTeam(response Response) {
-	squad := response.Data["id_105467854"].Squads[0]
+func displayTeam(response Response, idSquad string) {
+	squad := response.Data[idSquad].Squads[0]
 	players := squad.CurrentTourInfo.Players
 
 	sort.Sort(PlayersSlice(players))

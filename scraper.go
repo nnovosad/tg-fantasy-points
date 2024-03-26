@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-func scrapingTour(response Response) {
+func scrapingTour(response Response, idSquad string, tournament string) {
 	c := colly.NewCollector()
 
 	c.OnHTML("li.teaser-event", func(e *colly.HTMLElement) {
 		match := e.ChildText(".teaser-event__board")
 		status := e.ChildText(".teaser-event__status")
 
-		squad := response.Data["id_105467854"].Squads[0]
+		squad := response.Data[idSquad].Squads[0]
 		players := squad.CurrentTourInfo.Players
 
 		preparedMatch := removeExtraSpaces(match)
@@ -28,7 +28,7 @@ func scrapingTour(response Response) {
 		printPlayerInfo(players, match, preparedStatus)
 	})
 
-	err := c.Visit("https://www.sports.ru/seria-a/")
+	err := c.Visit("https://www.sports.ru/football/tournament/" + tournament)
 	if err != nil {
 		return
 	}
