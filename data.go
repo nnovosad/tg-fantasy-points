@@ -3,10 +3,14 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	_ "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -104,8 +108,6 @@ func main() {
 	}
 
 	for country, data := range leagues {
-		fmt.Println("League ", strings.Title(country))
-
 		postBody, _ := json.Marshal(map[string]string{
 			"query": data["query"],
 		})
@@ -134,15 +136,34 @@ func main() {
 
 		idSquad := data["id"]
 
-		fmt.Print("Start scraping tour \n")
-		scrapingTour(response, idSquad, data["tournament"])
-		fmt.Print("Finish scraping tour \n")
+		preparedCountry := strings.Title(country)
 
-		fmt.Print("Tour information: ")
-		displayTourInfo(response, idSquad)
+		displayMatchesInfoMessage := scrapingTour(response, idSquad, data["tournament"])
+		displayTourInfoMessage := displayTourInfo(response, idSquad)
+		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
 
-		fmt.Print("Season information: ")
-		displaySeasonInfo(response, idSquad)
+		output := "League: " + preparedCountry + "\n" +
+			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
+			"Tour information: " + displayTourInfoMessage + "\n" +
+			"Season Information: " + displaySeasonInfoMessage
+
+		err = godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+
+		telegramBotApiToken := os.Getenv("TELEGRAM_BOT_API_TOKEN")
+
+		bot, err := tgbotapi.NewBotAPI(telegramBotApiToken)
+		if err != nil {
+			panic(err)
+		}
+
+		message := tgbotapi.NewMessage(514411911, output)
+		_, err = bot.Send(message)
+		if err != nil {
+			log.Panic(err)
+		}
 
 		//fmt.Print("Start display team \n")
 		//displayTeam(response, idSquad)

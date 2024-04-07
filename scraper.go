@@ -7,8 +7,10 @@ import (
 	"strings"
 )
 
-func scrapingTour(response Response, idSquad string, tournament string) {
+func scrapingTour(response Response, idSquad string, tournament string) string {
 	c := colly.NewCollector()
+
+	var output = ""
 
 	c.OnHTML("li.teaser-event", func(e *colly.HTMLElement) {
 		match := e.ChildText(".teaser-event__board")
@@ -23,15 +25,17 @@ func scrapingTour(response Response, idSquad string, tournament string) {
 		serialNumber := e.Index
 		serialNumber++
 
-		fmt.Printf("%v. %v %v \n", serialNumber, preparedStatus, preparedMatch)
+		output += fmt.Sprintf("%v. %v %v \n", serialNumber, preparedStatus, preparedMatch)
 
-		printPlayerInfo(players, match, preparedStatus)
+		output += printPlayerInfo(players, match, preparedStatus)
 	})
 
 	err := c.Visit("https://www.sports.ru/football/tournament/" + tournament)
 	if err != nil {
-		return
+		return err.Error()
 	}
+
+	return output
 }
 
 func removeExtraSpaces(input string) string {
@@ -54,7 +58,9 @@ func getStatusMatch(statusMatch string) string {
 	return statusMatch
 }
 
-func printPlayerInfo(players PlayersSlice, match string, statusMatch string) {
+func printPlayerInfo(players PlayersSlice, match string, statusMatch string) string {
+	var output = ""
+
 	for _, v := range players {
 		teamName := v.SeasonPlayer.Team.Name
 		if strings.Contains(match, teamName) {
@@ -65,10 +71,12 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) {
 			}
 
 			if statusMatch == "завершен" {
-				fmt.Printf("--- %v(%v) scored %v points. %v. \n", v.SeasonPlayer.Name, teamName, v.Score, playerStatus)
+				output += fmt.Sprintf("--- %v(%v) scored %v points. %v. \n", v.SeasonPlayer.Name, teamName, v.Score, playerStatus)
 			} else {
-				fmt.Printf("--- Can play %v(%v). %v \n", v.SeasonPlayer.Name, teamName, playerStatus)
+				output += fmt.Sprintf("--- Can play %v(%v). %v \n", v.SeasonPlayer.Name, teamName, playerStatus)
 			}
 		}
 	}
+
+	return output
 }
