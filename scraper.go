@@ -66,14 +66,20 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 		if strings.Contains(match, teamName) {
 			playerStatus := "Main cast"
 
+			role := strings.Title(v.SeasonPlayer.Role)
+
 			if !v.IsStarting {
 				playerStatus = "On the bench"
 			}
 
 			if statusMatch == "завершен" {
-				output += fmt.Sprintf("--- %v(%v) scored %v points. %v. \n", v.SeasonPlayer.Name, teamName, v.Score, playerStatus)
+				output += fmt.Sprintf(
+					"--- %v(%v) scored %v points. %v. %v \n",
+					v.SeasonPlayer.Name, teamName, v.Score, playerStatus, role)
 			} else {
-				output += fmt.Sprintf("--- Can play %v(%v). %v \n", v.SeasonPlayer.Name, teamName, playerStatus)
+				output += fmt.Sprintf(
+					"--- Can play %v(%v). %v. %v \n",
+					v.SeasonPlayer.Name, teamName, playerStatus, role)
 			}
 		}
 	}
