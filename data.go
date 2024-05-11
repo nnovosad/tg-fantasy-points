@@ -7,7 +7,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -151,7 +151,7 @@ func main() {
 
 		defer resp.Body.Close()
 
-		body, err := ioutil.ReadAll(resp.Body)
+		body, err := io.ReadAll(resp.Body)
 
 		if err != nil {
 			log.Fatalln(err)
@@ -188,9 +188,5 @@ func main() {
 		if err != nil {
 			log.Panic(err)
 		}
-
-		//fmt.Print("Start display team \n")
-		//displayTeam(response, idSquad)
-		//fmt.Print("Finish display team \n")
 	}
 }
