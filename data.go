@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -183,7 +184,14 @@ func main() {
 			panic(err)
 		}
 
-		message := tgbotapi.NewMessage(514411911, output)
+		telegramChatID := os.Getenv("TELEGRAM_CHAT_ID")
+		preparedTelegramChatID, err := strconv.Atoi(telegramChatID)
+
+		if err != nil {
+			panic(err)
+		}
+
+		message := tgbotapi.NewMessage(int64(preparedTelegramChatID), output)
 		_, err = bot.Send(message)
 		if err != nil {
 			log.Panic(err)
