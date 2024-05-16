@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	_ "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
@@ -11,7 +12,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -80,6 +80,91 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_BOT_API_TOKEN"))
+	if err != nil {
+		log.Panic(err)
+	}
+
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+	updates := bot.GetUpdatesChan(u)
+
+	for update := range updates {
+		if update.Message != nil {
+			switch update.Message.Text {
+			case "/points":
+				handleCallback(update.Message.Chat.ID)
+			default:
+				fmt.Println("Unknown command")
+			}
+		}
+	}
+}
+
+func handleCallback(chatID int64) {
+	leagues := getLeagues()
+
+	for country, data := range leagues {
+		postBody, _ := json.Marshal(map[string]string{
+			"query": data["query"],
+		})
+
+		responseBody := bytes.NewBuffer(postBody)
+
+		resp, err := http.Post("https://www.sports.ru/gql/graphql/", "application/json", responseBody)
+
+		if err != nil {
+			log.Fatalf("An Error Occurred %v", err)
+		}
+
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		var response Response
+		err = json.Unmarshal(body, &response)
+		if err != nil {
+			log.Fatalf("Error decoding JSON: %v", err)
+		}
+
+		idSquad := data["id"]
+
+		preparedCountry := strings.Title(country)
+
+		displayMatchesInfoMessage := scrapingTour(response, idSquad, data["tournament"])
+		displayTourInfoMessage := displayTourInfo(response, idSquad)
+		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
+
+		output := "League: " + preparedCountry + "\n" +
+			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
+			"Tour information: " + displayTourInfoMessage + "\n" +
+			"Season Information: " + displaySeasonInfoMessage
+
+		telegramBotApiToken := os.Getenv("TELEGRAM_BOT_API_TOKEN")
+
+		bot, err := tgbotapi.NewBotAPI(telegramBotApiToken)
+		if err != nil {
+			panic(err)
+		}
+
+		message := tgbotapi.NewMessage(chatID, output)
+		_, err = bot.Send(message)
+		if err != nil {
+			log.Panic(err)
+		}
+	}
+}
+
+func getLeagues() map[string]map[string]string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	italyID := os.Getenv("ITALY_ID")
 	italyTournament := os.Getenv("ITALY_TOURNAMENT")
 	italyQuery := os.Getenv("ITALY_QUERY")
@@ -137,64 +222,5 @@ func main() {
 		},
 	}
 
-	for country, data := range leagues {
-		postBody, _ := json.Marshal(map[string]string{
-			"query": data["query"],
-		})
-
-		responseBody := bytes.NewBuffer(postBody)
-
-		resp, err := http.Post("https://www.sports.ru/gql/graphql/", "application/json", responseBody)
-
-		if err != nil {
-			log.Fatalf("An Error Occurred %v", err)
-		}
-
-		defer resp.Body.Close()
-
-		body, err := io.ReadAll(resp.Body)
-
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		var response Response
-		err = json.Unmarshal(body, &response)
-		if err != nil {
-			log.Fatalf("Error decoding JSON: %v", err)
-		}
-
-		idSquad := data["id"]
-
-		preparedCountry := strings.Title(country)
-
-		displayMatchesInfoMessage := scrapingTour(response, idSquad, data["tournament"])
-		displayTourInfoMessage := displayTourInfo(response, idSquad)
-		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
-
-		output := "League: " + preparedCountry + "\n" +
-			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
-			"Tour information: " + displayTourInfoMessage + "\n" +
-			"Season Information: " + displaySeasonInfoMessage
-
-		telegramBotApiToken := os.Getenv("TELEGRAM_BOT_API_TOKEN")
-
-		bot, err := tgbotapi.NewBotAPI(telegramBotApiToken)
-		if err != nil {
-			panic(err)
-		}
-
-		telegramChatID := os.Getenv("TELEGRAM_CHAT_ID")
-		preparedTelegramChatID, err := strconv.Atoi(telegramChatID)
-
-		if err != nil {
-			panic(err)
-		}
-
-		message := tgbotapi.NewMessage(int64(preparedTelegramChatID), output)
-		_, err = bot.Send(message)
-		if err != nil {
-			log.Panic(err)
-		}
-	}
+	return leagues
 }
