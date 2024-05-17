@@ -37,11 +37,17 @@ type SquadInfo struct {
 type CurrentTourInfo struct {
 	Players   []PlayerInfo `json:"players"`
 	ScoreInfo ScoreInfo    `json:"scoreInfo"`
+	TourInfo  TourInfo     `json:"tour"`
 }
 
 type ScoreInfo struct {
 	AverageScore float64 `json:"averageScore"`
 	Score        int     `json:"score"`
+}
+
+type TourInfo struct {
+	Name   string `json:"name"`
+	Status string `json:"status"`
 }
 
 type PlayerInfo struct {
@@ -133,15 +139,16 @@ func handleCallback(chatID int64) {
 
 		idSquad := data["id"]
 
-		preparedCountry := strings.Title(country)
+		preparedCountry := strings.ToTitle(country)
 
 		displayMatchesInfoMessage := scrapingTour(response, idSquad, data["tournament"])
-		displayTourInfoMessage := displayTourInfo(response, idSquad)
+		displayInfoTourMessage, displayResultsTourMessage := displayTourInfo(response, idSquad)
 		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
 
 		output := "League: " + preparedCountry + "\n" +
+			"Tour information: " + displayInfoTourMessage + "\n" +
 			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
-			"Tour information: " + displayTourInfoMessage + "\n" +
+			"Tour results: " + displayResultsTourMessage + "\n" +
 			"Season Information: " + displaySeasonInfoMessage
 
 		telegramBotApiToken := os.Getenv("TELEGRAM_BOT_API_TOKEN")
