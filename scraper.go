@@ -62,8 +62,11 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 	var output = ""
 
 	for _, v := range players {
-		teamName := v.SeasonPlayer.Team.Name
-		if strings.Contains(match, teamName) {
+		playerTeamName := v.SeasonPlayer.Team.Name
+
+		re := regexp.MustCompile(`(?i)(^|\s)` + regexp.QuoteMeta(playerTeamName) + `($|\s)`)
+
+		if re.MatchString(match) {
 			playerStatus := "Main cast"
 
 			role := strings.Title(v.SeasonPlayer.Role)
@@ -75,11 +78,11 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 			if statusMatch == "завершен" {
 				output += fmt.Sprintf(
 					"--- %v(%v) scored %v points. %v. %v \n",
-					v.SeasonPlayer.Name, teamName, v.Score, playerStatus, role)
+					v.SeasonPlayer.Name, playerTeamName, v.Score, playerStatus, role)
 			} else {
 				output += fmt.Sprintf(
 					"--- Can play %v(%v). %v. %v \n",
-					v.SeasonPlayer.Name, teamName, playerStatus, role)
+					v.SeasonPlayer.Name, playerTeamName, playerStatus, role)
 			}
 		}
 	}
