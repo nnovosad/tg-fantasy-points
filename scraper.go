@@ -69,7 +69,7 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 		if re.MatchString(match) {
 			playerStatus := "Main cast"
 
-			role := strings.Title(v.SeasonPlayer.Role)
+			role := uppercaseFirstCharacter(v.SeasonPlayer.Role)
 
 			if !v.IsStarting {
 				playerStatus = "On the bench"

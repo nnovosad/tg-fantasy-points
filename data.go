@@ -8,11 +8,11 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv"
+	_ "golang.org/x/text/cases"
 	"io"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
 type Response struct {
@@ -139,13 +139,13 @@ func handleCallback(chatID int64) {
 
 		idSquad := data["id"]
 
-		preparedCountry := strings.ToTitle(country)
+		country = uppercaseFirstCharacter(country)
 
 		displayMatchesInfoMessage := scrapingTour(response, idSquad, data["tournament"])
 		displayInfoTourMessage, displayResultsTourMessage := displayTourInfo(response, idSquad)
 		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
 
-		output := "League: " + preparedCountry + "\n" +
+		output := "League: " + country + "\n" +
 			"Tour information: " + displayInfoTourMessage + "\n" +
 			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
 			"Tour results: " + displayResultsTourMessage + "\n" +
