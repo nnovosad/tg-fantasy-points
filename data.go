@@ -196,6 +196,22 @@ func getLeagues() map[string]map[string]string {
 	germanyTournament := os.Getenv("GERMANY_TOURNAMENT")
 	germanyQuery := os.Getenv("GERMANY_QUERY")
 
+	portugalID := os.Getenv("PORTUGAL_ID")
+	portugalTournament := os.Getenv("PORTUGAL_TOURNAMENT")
+	portugalQuery := os.Getenv("PORTUGAL_QUERY")
+
+	hollandID := os.Getenv("HOLLAND_ID")
+	hollandTournament := os.Getenv("HOLLAND_TOURNAMENT")
+	hollandQuery := os.Getenv("HOLLAND_QUERY")
+
+	turkeyID := os.Getenv("TURKEY_ID")
+	turkeyTournament := os.Getenv("TURKEY_TOURNAMENT")
+	turkeyQuery := os.Getenv("TURKEY_QUERY")
+
+	championshipID := os.Getenv("CHAMPIONSHIP_ID")
+	championshipTournament := os.Getenv("CHAMPIONSHIP_TOURNAMENT")
+	championshipQuery := os.Getenv("CHAMPIONSHIP_QUERY")
+
 	leagues := map[string]map[string]string{
 		"italy": {
 			"id":         italyID,
@@ -226,6 +242,26 @@ func getLeagues() map[string]map[string]string {
 			"id":         germanyID,
 			"tournament": germanyTournament,
 			"query":      germanyQuery,
+		},
+		"portugal": {
+			"id":         portugalID,
+			"tournament": portugalTournament,
+			"query":      portugalQuery,
+		},
+		"holland": {
+			"id":         hollandID,
+			"tournament": hollandTournament,
+			"query":      hollandQuery,
+		},
+		"turkey": {
+			"id":         turkeyID,
+			"tournament": turkeyTournament,
+			"query":      turkeyQuery,
+		},
+		"championship": {
+			"id":         championshipID,
+			"tournament": championshipTournament,
+			"query":      championshipQuery,
 		},
 	}
 
