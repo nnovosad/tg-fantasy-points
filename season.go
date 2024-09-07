@@ -8,14 +8,20 @@ func displaySeasonInfo(response Response, idSquad string) string {
 
 	globalLeague := squad.GlobalLeagues[0]
 
+	seasonScoreInfoPlace := seasonScoreInfo.Place
+	globalLeagueTotalPlaces := globalLeague.TotalPlaces
+
 	scoredPoints := formatNumberWithSpaces(seasonScoreInfo.Score)
-	currentPlace := formatNumberWithSpaces(seasonScoreInfo.Place)
-	totalPlaces := formatNumberWithSpaces(globalLeague.TotalPlaces)
+	currentPlace := formatNumberWithSpaces(seasonScoreInfoPlace)
+	totalPlaces := formatNumberWithSpaces(globalLeagueTotalPlaces)
+
+	percentileRank := prepareRank(seasonScoreInfoPlace, globalLeagueTotalPlaces)
 
 	return fmt.Sprintf(
-		"You scored %v points in the season and are in %vrd place out of %v \n",
+		"You scored %v points in the season and are in %vrd place out of %v. Rank: %v \n",
 		scoredPoints,
 		currentPlace,
 		totalPlaces,
+		percentileRank,
 	)
 }

@@ -32,3 +32,7 @@ func formatNumberWithSpaces(n int) string {
 
 	return result.String()
 }
+
+func prepareRank(currentPlace int, totalPlace int) int {
+	return int((1.0 - float64(currentPlace)/float64(totalPlace)) * 100)
+}
