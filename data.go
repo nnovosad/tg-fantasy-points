@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"os"
+
 	_ "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv"
 	_ "golang.org/x/text/cases"
-	"io"
-	"log"
-	"net/http"
-	"os"
 )
 
 type Response struct {
@@ -172,87 +173,45 @@ func getLeagues() map[string]map[string]string {
 		log.Fatal("Error loading .env file")
 	}
 
-	commonID := os.Getenv("QUERY_COMMON_ID")
-
 	italyID := os.Getenv("ITALY_ID")
 	italyTournament := os.Getenv("ITALY_TOURNAMENT")
-	italyFantasyQueriesID := os.Getenv("ITALY_FANTASY_QUERIES_ID")
-	italyOddsQueriesID := os.Getenv("ITALY_ODDS_QUERIES_ID")
-	italyName := os.Getenv("ITALY_NAME")
-	italySquadID := os.Getenv("ITALY_SQUAD_ID")
-	italyQuery := prepareBodyRequest(commonID, italyID, italyFantasyQueriesID, italyOddsQueriesID, italyName, italySquadID)
+	italyQuery := os.Getenv("ITALY_QUERY")
 
 	russiaID := os.Getenv("RUSSIA_ID")
 	russiaTournament := os.Getenv("RUSSIA_TOURNAMENT")
-	russiaFantasyQueriesID := os.Getenv("RUSSIA_FANTASY_QUERIES_ID")
-	russiaOddsQueriesID := os.Getenv("RUSSIA_ODDS_QUERIES_ID")
-	russiaName := os.Getenv("RUSSIA_NAME")
-	russiaSquadID := os.Getenv("RUSSIA_SQUAD_ID")
-	russiaQuery := prepareBodyRequest(commonID, russiaID, russiaFantasyQueriesID, russiaOddsQueriesID, russiaName, russiaSquadID)
+	russiaQuery := os.Getenv("RUSSIA_QUERY")
 
 	englandID := os.Getenv("ENGLAND_ID")
 	englandTournament := os.Getenv("ENGLAND_TOURNAMENT")
-	englandFantasyQueriesID := os.Getenv("ENGLAND_FANTASY_QUERIES_ID")
-	englandOddsQueriesID := os.Getenv("ENGLAND_ODDS_QUERIES_ID")
-	englandName := os.Getenv("ENGLAND_NAME")
-	englandSquadID := os.Getenv("ENGLAND_SQUAD_ID")
-	englandQuery := prepareBodyRequest(commonID, englandID, englandFantasyQueriesID, englandOddsQueriesID, englandName, englandSquadID)
+	englandQuery := os.Getenv("ENGLAND_QUERY")
 
 	spainID := os.Getenv("SPAIN_ID")
 	spainTournament := os.Getenv("SPAIN_TOURNAMENT")
-	spainFantasyQueriesID := os.Getenv("SPAIN_FANTASY_QUERIES_ID")
-	spainOddsQueriesID := os.Getenv("SPAIN_ODDS_QUERIES_ID")
-	spainName := os.Getenv("SPAIN_NAME")
-	spainSquadID := os.Getenv("SPAIN_SQUAD_ID")
-	spainQuery := prepareBodyRequest(commonID, spainID, spainFantasyQueriesID, spainOddsQueriesID, spainName, spainSquadID)
+	spainQuery := os.Getenv("SPAIN_QUERY")
 
 	franceID := os.Getenv("FRANCE_ID")
 	franceTournament := os.Getenv("FRANCE_TOURNAMENT")
-	franceFantasyQueriesID := os.Getenv("FRANCE_FANTASY_QUERIES_ID")
-	franceOddsQueriesID := os.Getenv("FRANCE_ODDS_QUERIES_ID")
-	franceName := os.Getenv("FRANCE_NAME")
-	franceSquadID := os.Getenv("FRANCE_SQUAD_ID")
-	franceQuery := prepareBodyRequest(commonID, franceID, franceFantasyQueriesID, franceOddsQueriesID, franceName, franceSquadID)
+	franceQuery := os.Getenv("FRANCE_QUERY")
 
 	germanyID := os.Getenv("GERMANY_ID")
 	germanyTournament := os.Getenv("GERMANY_TOURNAMENT")
-	germanyFantasyQueriesID := os.Getenv("GERMANY_FANTASY_QUERIES_ID")
-	germanyOddsQueriesID := os.Getenv("GERMANY_ODDS_QUERIES_ID")
-	germanyName := os.Getenv("GERMANY_NAME")
-	germanySquadID := os.Getenv("GERMANY_SQUAD_ID")
-	germanyQuery := prepareBodyRequest(commonID, germanyID, germanyFantasyQueriesID, germanyOddsQueriesID, germanyName, germanySquadID)
+	germanyQuery := os.Getenv("GERMANY_QUERY")
 
 	portugalID := os.Getenv("PORTUGAL_ID")
 	portugalTournament := os.Getenv("PORTUGAL_TOURNAMENT")
-	portugalFantasyQueriesID := os.Getenv("PORTUGAL_FANTASY_QUERIES_ID")
-	portugalOddsQueriesID := os.Getenv("PORTUGAL_ODDS_QUERIES_ID")
-	portugalName := os.Getenv("PORTUGAL_NAME")
-	portugalSquadID := os.Getenv("PORTUGAL_SQUAD_ID")
-	portugalQuery := prepareBodyRequest(commonID, portugalID, portugalFantasyQueriesID, portugalOddsQueriesID, portugalName, portugalSquadID)
+	portugalQuery := os.Getenv("PORTUGAL_QUERY")
 
 	hollandID := os.Getenv("HOLLAND_ID")
 	hollandTournament := os.Getenv("HOLLAND_TOURNAMENT")
-	hollandFantasyQueriesID := os.Getenv("HOLLAND_FANTASY_QUERIES_ID")
-	hollandOddsQueriesID := os.Getenv("HOLLAND_ODDS_QUERIES_ID")
-	hollandName := os.Getenv("HOLLAND_NAME")
-	hollandSquadID := os.Getenv("HOLLAND_SQUAD_ID")
-	hollandQuery := prepareBodyRequest(commonID, hollandID, hollandFantasyQueriesID, hollandOddsQueriesID, hollandName, hollandSquadID)
+	hollandQuery := os.Getenv("HOLLAND_QUERY")
 
 	turkeyID := os.Getenv("TURKEY_ID")
 	turkeyTournament := os.Getenv("TURKEY_TOURNAMENT")
-	turkeyFantasyQueriesID := os.Getenv("TURKEY_FANTASY_QUERIES_ID")
-	turkeyOddsQueriesID := os.Getenv("TURKEY_ODDS_QUERIES_ID")
-	turkeyName := os.Getenv("TURKEY_NAME")
-	turkeySquadID := os.Getenv("TURKEY_SQUAD_ID")
-	turkeyQuery := prepareBodyRequest(commonID, turkeyID, turkeyFantasyQueriesID, turkeyOddsQueriesID, turkeyName, turkeySquadID)
+	turkeyQuery := os.Getenv("TURKEY_QUERY")
 
 	championshipID := os.Getenv("CHAMPIONSHIP_ID")
 	championshipTournament := os.Getenv("CHAMPIONSHIP_TOURNAMENT")
-	championshipFantasyQueriesID := os.Getenv("CHAMPIONSHIP_FANTASY_QUERIES_ID")
-	championshipOddsQueriesID := os.Getenv("CHAMPIONSHIP_ODDS_QUERIES_ID")
-	championshipName := os.Getenv("CHAMPIONSHIP_NAME")
-	championshipSquadID := os.Getenv("CHAMPIONSHIP_SQUAD_ID")
-	championshipQuery := prepareBodyRequest(commonID, championshipID, championshipFantasyQueriesID, championshipOddsQueriesID, championshipName, championshipSquadID)
+	championshipQuery := os.Getenv("CHAMPIONSHIP_QUERY")
 
 	leagues := map[string]map[string]string{
 		"italy": {
