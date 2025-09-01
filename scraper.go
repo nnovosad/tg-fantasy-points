@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
 	"regexp"
 	"strings"
+
+	"github.com/gocolly/colly"
 )
 
 func scrapingTour(response Response, idSquad string, tournament string) string {
@@ -33,6 +34,10 @@ func scrapingTour(response Response, idSquad string, tournament string) string {
 	err := c.Visit("https://www.sports.ru/football/tournament/" + tournament)
 	if err != nil {
 		return err.Error()
+	}
+
+	if output == "" {
+		output = "No matches found" + "\n"
 	}
 
 	return output
