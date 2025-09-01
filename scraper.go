@@ -69,9 +69,7 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 	for _, v := range players {
 		playerTeamName := v.SeasonPlayer.Team.Name
 
-		re := regexp.MustCompile(`(?i)(^|\s)` + regexp.QuoteMeta(playerTeamName) + `($|\s)`)
-
-		if re.MatchString(match) {
+		if isPlayerTeam(match, playerTeamName) {
 			playerStatus := "Main cast"
 
 			role := uppercaseFirstCharacter(v.SeasonPlayer.Role)

@@ -1,10 +1,12 @@
 package main
 
 import (
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
+	"regexp"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 func uppercaseFirstCharacter(str string) string {
@@ -35,4 +37,16 @@ func formatNumberWithSpaces(n int) string {
 
 func prepareRank(currentPlace int, totalPlace int) int {
 	return int((1.0 - float64(currentPlace)/float64(totalPlace)) * 100)
+}
+
+func isPlayerTeam(match string, playerTeamName string) bool {
+	parts := strings.Split(match, ":")
+	left := strings.TrimSpace(parts[0])
+	right := strings.TrimSpace(parts[1])
+
+	re := regexp.MustCompile(`\d+`)
+	leftTeam := strings.TrimSpace(re.ReplaceAllString(left, ""))
+	rightTeam := strings.TrimSpace(re.ReplaceAllString(right, ""))
+
+	return leftTeam == playerTeamName || rightTeam == playerTeamName
 }
