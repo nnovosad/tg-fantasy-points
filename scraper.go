@@ -36,7 +36,7 @@ func scrapingTour(response Response, idSquad string, tournament string) string {
 		return err.Error()
 	}
 
-	if output == "" {
+	if tournament == "primeira-liga" {
 		output = "No matches found" + "\n"
 	}
 

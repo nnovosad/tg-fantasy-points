@@ -17,6 +17,10 @@ func displayTourInfo(response Response, idSquad string) (string, string) {
 
 	tourStatus = strings.Replace(tourStatus, "_", " ", -1)
 
-	return fmt.Sprintf("%v. %v", tourName, tourStatus),
-		fmt.Sprintf("You scored %v points. Average score %v points \n", scoreInfo.Score, scoreInfo.AverageScore)
+	if tourStatus == "Opened" {
+		return fmt.Sprintf("%v. %v", tourName, tourStatus), "The tour is open."
+	} else {
+		return fmt.Sprintf("%v. %v", tourName, tourStatus),
+			fmt.Sprintf("You scored %v points. Average score %v points \n", scoreInfo.Score, scoreInfo.AverageScore)
+	}
 }
