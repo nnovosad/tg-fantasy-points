@@ -18,7 +18,7 @@ func displaySeasonInfo(response Response, idSquad string) string {
 	percentileRank := prepareRank(seasonScoreInfoPlace, globalLeagueTotalPlaces)
 
 	return fmt.Sprintf(
-		"You scored %v points in the season and are in %vrd place out of %v. Rank: %v \n",
+		"You scored %v points in the season and are in %vrd place out of %v. Rank: %v",
 		scoredPoints,
 		currentPlace,
 		totalPlaces,

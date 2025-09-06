@@ -146,11 +146,12 @@ func handleCallback(chatID int64) {
 		displayInfoTourMessage, displayResultsTourMessage := displayTourInfo(response, idSquad)
 		displaySeasonInfoMessage := displaySeasonInfo(response, idSquad)
 
-		output := "League: " + country + "\n" +
-			"Tour information: " + displayInfoTourMessage + "\n" +
-			"Matches information: \n" + displayMatchesInfoMessage + "\n" +
-			"Tour results: " + displayResultsTourMessage + "\n" +
-			"Season Information: " + displaySeasonInfoMessage
+		formattedMatches := formatMatchesInfo(displayMatchesInfoMessage)
+		formattedTourInfo := formatTourInfo(displayInfoTourMessage)
+		formattedTourResults := formatTourResults(displayResultsTourMessage)
+		formattedSeasonInfo := formatSeasonInfo(displaySeasonInfoMessage)
+
+		output := formatTelegramMessage(country, formattedTourInfo, formattedMatches, formattedTourResults, formattedSeasonInfo)
 
 		telegramBotApiToken := os.Getenv("TELEGRAM_BOT_API_TOKEN")
 

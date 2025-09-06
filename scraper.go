@@ -80,11 +80,11 @@ func printPlayerInfo(players PlayersSlice, match string, statusMatch string) str
 
 			if statusMatch == "завершен" {
 				output += fmt.Sprintf(
-					"--- %v(%v) scored %v points. %v. %v \n",
+					"--- %v (%v) scored %v points. %v. %v \n",
 					v.SeasonPlayer.Name, playerTeamName, v.Score, playerStatus, role)
 			} else {
 				output += fmt.Sprintf(
-					"--- Can play %v(%v). %v. %v \n",
+					"--- Can play %v (%v). %v. %v \n",
 					v.SeasonPlayer.Name, playerTeamName, playerStatus, role)
 			}
 		}
